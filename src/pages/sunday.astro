@@ -1,5 +1,6 @@
 ---
-// Sunday Page - 完全独立型テンプレート
+// Sunday - Type B: Generative / Organic | p5.js | Muted
+import { name, fullRole, companyLink, blogLink, githubLink } from '../data/resources';
 ---
 
 <!DOCTYPE html>
@@ -7,8 +8,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sunday | NaN</title>
+  <title>Sunday | {name}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Open+Sans:wght@300;400&display=swap');
+
     * {
       margin: 0;
       padding: 0;
@@ -16,72 +20,214 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      background: #ffffff;
-      color: #333333;
+      font-family: 'Open Sans', sans-serif;
+      background: #d9d4cd;
+      color: #5a5550;
+      overflow: hidden;
       min-height: 100vh;
+    }
+
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .calm-content {
+      position: relative;
+      z-index: 2;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
-    }
-
-    .container {
+      min-height: 100vh;
+      padding: 3rem;
+      pointer-events: none;
       text-align: center;
-      max-width: 800px;
-      width: 100%;
     }
 
-    h1 {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    .calm-title {
+      font-family: 'Merriweather', serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
       margin-bottom: 1rem;
-      color: #1a1a1a;
+      color: #8a8075;
+      opacity: 0;
+      animation: gentleFade 1.5s ease-out 0.3s forwards;
     }
 
-    .subtitle {
-      font-size: clamp(1rem, 2vw, 1.5rem);
-      color: #666666;
-      font-weight: 400;
-      margin-bottom: 2rem;
+    .calm-role {
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 300;
+      color: #9a9085;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: gentleFade 1.5s ease-out 0.6s forwards;
     }
 
-    .description {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #555555;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .nav-link {
-      display: inline-block;
+    .calm-links {
+      display: flex;
+      gap: 2rem;
       margin-top: 2rem;
-      padding: 0.75rem 1.5rem;
-      background: #f0f0f0;
-      color: #333333;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: all 0.3s ease;
+      opacity: 0;
+      animation: gentleFade 1.5s ease-out 0.9s forwards;
     }
 
-    .nav-link:hover {
-      background: #e0e0e0;
-      transform: translateY(-2px);
+    .calm-link {
+      padding: 1rem 2rem;
+      background: rgba(138, 128, 117, 0.15);
+      backdrop-filter: blur(5px);
+      color: #7a7065;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 400;
+      font-size: 0.95rem;
+      pointer-events: all;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid rgba(138, 128, 117, 0.2);
+    }
+
+    .calm-link:hover {
+      background: rgba(138, 128, 117, 0.25);
+      border-color: rgba(138, 128, 117, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .calm-footer {
+      margin-top: 4rem;
+      opacity: 0;
+      animation: gentleFade 1.5s ease-out 1.2s forwards;
+    }
+
+    .calm-home {
+      padding: 0.75rem 1.5rem;
+      background: rgba(106, 100, 90, 0.2);
+      color: #6a645a;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: 400;
+      font-size: 0.9rem;
+      pointer-events: all;
+      transition: all 0.4s ease;
+    }
+
+    .calm-home:hover {
+      background: rgba(106, 100, 90, 0.3);
+      transform: scale(1.05);
+    }
+
+    @keyframes gentleFade {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .calm-content {
+        padding: 2rem;
+      }
+
+      .calm-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Sunday</h1>
-    <p class="subtitle">日曜日</p>
-    <p class="description">
-      このページは将来的にカスタマイズ可能なテンプレートです。<br>
-      HTMLとCSSを自由に編集して、独自のデザインを作成できます。
-    </p>
-    <a href="/" class="nav-link">← ホームに戻る</a>
+  <div id="canvas-container"></div>
+
+  <div class="calm-content">
+    <h1 class="calm-title">{name}</h1>
+    <p class="calm-role">{fullRole}</p>
+
+    <div class="calm-links">
+      <a href={companyLink.url} class="calm-link" target="_blank" rel="noopener">{companyLink.label}</a>
+      <a href={blogLink.url} class="calm-link" target="_blank" rel="noopener">{blogLink.label}</a>
+      <a href={githubLink.url} class="calm-link" target="_blank" rel="noopener">{githubLink.label}</a>
+    </div>
+
+    <div class="calm-footer">
+      <a href="/" class="calm-home">← Home</a>
+    </div>
   </div>
+
+  <script>
+    // Type B: Gentle waves with muted tones
+    let waves = [];
+    let yoff = 0;
+
+    function setup() {
+      let canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('canvas-container');
+      noStroke();
+
+      // Create multiple wave layers
+      for (let i = 0; i < 5; i++) {
+        waves.push(new Wave(i));
+      }
+    }
+
+    function draw() {
+      background(217, 212, 205, 30);
+
+      for (let wave of waves) {
+        wave.update();
+        wave.display();
+      }
+
+      yoff += 0.005;
+    }
+
+    class Wave {
+      constructor(index) {
+        this.index = index;
+        this.amplitude = 80 + index * 20;
+        this.frequency = 0.005 - index * 0.0005;
+        this.y = height / 2 + index * 40 - 100;
+        this.color = [
+          color(138, 128, 117, 20),
+          color(154, 144, 133, 15),
+          color(122, 112, 101, 25),
+          color(106, 100, 90, 18),
+          color(90, 85, 80, 22)
+        ][index];
+      }
+
+      update() {
+        // Gentle wave movement
+      }
+
+      display() {
+        fill(this.color);
+        beginShape();
+
+        let xoff = yoff + this.index * 0.5;
+
+        for (let x = 0; x <= width; x += 10) {
+          let y = this.y + sin(x * this.frequency + xoff) * this.amplitude;
+          y += noise(x * 0.01, yoff + this.index) * 30;
+          vertex(x, y);
+        }
+
+        vertex(width, height);
+        vertex(0, height);
+        endShape(CLOSE);
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+  </script>
 </body>
 </html>

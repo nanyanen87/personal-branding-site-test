@@ -1,5 +1,6 @@
 ---
-// Wednesday Page - 完全独立型テンプレート
+// Wednesday - Type A: Systematic / Swiss Style | Three.js | Monochrome
+import { name, fullRole, expertiseList } from '../data/resources';
 ---
 
 <!DOCTYPE html>
@@ -7,8 +8,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wednesday | NaN</title>
+  <title>Wednesday | {name}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500&display=swap');
+
     * {
       margin: 0;
       padding: 0;
@@ -16,72 +20,205 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
       background: #ffffff;
-      color: #333333;
+      color: #000000;
+      overflow: hidden;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
     }
 
-    .container {
-      text-align: center;
-      max-width: 800px;
+    #three-container {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
+      z-index: 1;
     }
 
-    h1 {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 700;
+    .swiss-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      height: 100vh;
+      padding: 5vw;
+      gap: 2vw;
+      pointer-events: none;
+    }
+
+    .swiss-title {
+      grid-column: 1 / 8;
+      grid-row: 3 / 5;
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 300;
       letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-      color: #1a1a1a;
+      line-height: 1.1;
+      opacity: 0;
+      animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
     }
 
-    .subtitle {
-      font-size: clamp(1rem, 2vw, 1.5rem);
-      color: #666666;
-      font-weight: 400;
-      margin-bottom: 2rem;
-    }
-
-    .description {
+    .swiss-role {
+      grid-column: 1 / 7;
+      grid-row: 5 / 6;
       font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+    }
+
+    .swiss-list {
+      grid-column: 8 / 13;
+      grid-row: 3 / 10;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      opacity: 0;
+      animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+    }
+
+    .swiss-list-item {
+      font-size: 0.85rem;
+      font-weight: 300;
       line-height: 1.6;
-      color: #555555;
-      max-width: 600px;
-      margin: 0 auto;
+      padding-left: 1rem;
+      border-left: 1px solid #000;
     }
 
-    .nav-link {
-      display: inline-block;
-      margin-top: 2rem;
-      padding: 0.75rem 1.5rem;
-      background: #f0f0f0;
-      color: #333333;
+    .swiss-nav {
+      grid-column: 1 / 3;
+      grid-row: 11 / 12;
+      align-self: end;
+      font-size: 0.9rem;
+      font-weight: 400;
       text-decoration: none;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: all 0.3s ease;
+      color: #000;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #000;
+      pointer-events: all;
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+      animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
     }
 
-    .nav-link:hover {
-      background: #e0e0e0;
-      transform: translateY(-2px);
+    .swiss-nav:hover {
+      padding-left: 1rem;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .swiss-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 2rem;
+        padding: 2rem;
+      }
+
+      .swiss-title {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .swiss-role {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .swiss-list {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .swiss-nav {
+        grid-column: 1;
+        grid-row: auto;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Wednesday</h1>
-    <p class="subtitle">水曜日</p>
-    <p class="description">
-      このページは将来的にカスタマイズ可能なテンプレートです。<br>
-      HTMLとCSSを自由に編集して、独自のデザインを作成できます。
-    </p>
-    <a href="/" class="nav-link">← ホームに戻る</a>
+  <div id="three-container"></div>
+
+  <div class="swiss-grid">
+    <h1 class="swiss-title">{name}</h1>
+    <p class="swiss-role">{fullRole}</p>
+
+    <div class="swiss-list">
+      {expertiseList.map(item => (
+        <div class="swiss-list-item">{item}</div>
+      ))}
+    </div>
+
+    <a href="/" class="swiss-nav">← Return</a>
   </div>
+
+  <script>
+    // Type A: Minimal geometric 3D composition
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.z = 5;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('three-container').appendChild(renderer.domElement);
+
+    // Create minimal geometric shapes
+    const geometry1 = new THREE.BoxGeometry(1, 1, 1);
+    const geometry2 = new THREE.TorusGeometry(0.7, 0.2, 16, 100);
+
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      wireframe: true
+    });
+
+    const cube = new THREE.Mesh(geometry1, material);
+    cube.position.x = -2;
+    scene.add(cube);
+
+    const torus = new THREE.Mesh(geometry2, material);
+    torus.position.x = 2;
+    scene.add(torus);
+
+    // Smooth, controlled animation
+    function animate() {
+      requestAnimationFrame(animate);
+
+      cube.rotation.x += 0.003;
+      cube.rotation.y += 0.003;
+
+      torus.rotation.x += 0.002;
+      torus.rotation.y += 0.004;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Responsive resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
 </body>
 </html>
