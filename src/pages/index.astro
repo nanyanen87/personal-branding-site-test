@@ -1,4 +1,5 @@
 ---
+import Background from '../components/Background.jsx';
 ---
 
 <!DOCTYPE html>
@@ -6,9 +7,331 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello World</title>
+  <title>NaN – Backend Engineer / Platform Developer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Crimson+Pro:wght@300;400&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #faf8f5;
+      color: #3a3a3a;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .container {
+      position: relative;
+      min-height: 100vh;
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    /* Organic asymmetric layout */
+    .name-section {
+      position: fixed;
+      top: 8%;
+      left: 5%;
+      max-width: 420px;
+      animation: floatIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .name-section h1 {
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.8rem;
+      font-family: 'Crimson Pro', serif;
+      color: #2d2d2d;
+    }
+
+    .name-section .role {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      font-weight: 400;
+      color: #6b8e7f;
+      letter-spacing: 0.02em;
+      line-height: 1.6;
+    }
+
+    /* Main content flows naturally */
+    .content {
+      margin-left: auto;
+      margin-top: 18rem;
+      max-width: 580px;
+      padding-right: 5%;
+      animation: floatIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeSlideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .section:nth-child(1) { animation-delay: 0.5s; }
+    .section:nth-child(2) { animation-delay: 0.7s; }
+    .section:nth-child(3) { animation-delay: 0.9s; }
+    .section:nth-child(4) { animation-delay: 1.1s; }
+    .section:nth-child(5) { animation-delay: 1.3s; }
+
+    .section h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #9db4a8;
+      margin-bottom: 1.2rem;
+      font-weight: 500;
+    }
+
+    .section p,
+    .section li {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #4a4a4a;
+      font-weight: 300;
+    }
+
+    .section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .section li {
+      padding-left: 1.2em;
+      position: relative;
+      margin-bottom: 0.6rem;
+    }
+
+    .section li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: #b8c9bf;
+      font-size: 1.5em;
+      line-height: 0.9;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .links a {
+      color: #6b8e7f;
+      text-decoration: none;
+      font-size: 0.95rem;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding-bottom: 2px;
+    }
+
+    .links a:hover {
+      color: #4a6b5e;
+      border-bottom-color: #b8c9bf;
+      transform: translateY(-1px);
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tech-tag {
+      background: rgba(155, 180, 168, 0.12);
+      color: #5a7a6d;
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 400;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: default;
+    }
+
+    .tech-tag:hover {
+      background: rgba(155, 180, 168, 0.2);
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* Breathing cursor follower */
+    .cursor-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(198, 219, 210, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1;
+      mix-blend-mode: screen;
+      opacity: 0;
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 968px) {
+      .name-section {
+        position: static;
+        max-width: 100%;
+        margin-bottom: 3rem;
+      }
+
+      .content {
+        margin-left: 0;
+        margin-top: 0;
+        max-width: 100%;
+        padding-right: 0;
+      }
+
+      .container {
+        padding: 2rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      .name-section h1 {
+        font-size: 2.2rem;
+      }
+
+      .links {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello World</h1>
+  <Background client:load />
+
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="container">
+    <div class="name-section">
+      <h1>NaN</h1>
+      <p class="role">Backend Engineer<br>Platform Developer</p>
+    </div>
+
+    <div class="content">
+      <div class="section">
+        <h2>Profile</h2>
+        <p>京都大学 総合人間学部 卒。Link-U Technologies にて LAMP/Linux 環境で4年半フルスタック開発に従事。現在は Supabase / Cloudflare / TypeScript を軸にしたプラットフォーム開発に注力。</p>
+        <div class="links">
+          <a href="https://technologies.link-u.co.jp/company" target="_blank" rel="noopener">Company</a>
+          <a href="https://zenn.dev/nanyanen" target="_blank" rel="noopener">Tech Blog</a>
+          <a href="https://github.com/nanyanen87" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Core Stack</h2>
+        <div class="tech-stack">
+          <span class="tech-tag">Supabase</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">Cloudflare Workers</span>
+          <span class="tech-tag">TypeScript</span>
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">RLS</span>
+          <span class="tech-tag">R2</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Expertise</h2>
+        <ul>
+          <li>データモデル設計（正規化・非正規化戦略）</li>
+          <li>権限/公開状態/RLS の整合性ある設計</li>
+          <li>Cloudflare Workers を中心としたコスト最適化</li>
+          <li>ログ基盤・アラート設計（R2 / DO バッファリング）</li>
+          <li>SaaS の土台となる基盤層設計</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>Strengths</h2>
+        <p>ややこしい問題を構造で理解し、分解して最適解を組み立てる。冷静にコストと価値のトレードオフを見る。要件から逆算して全体設計を描く（データモデル → API → 認証認可 → 運用）。</p>
+      </div>
+
+      <div class="section">
+        <h2>Current Focus</h2>
+        <ul>
+          <li>Supabase + Cloudflare を軸にした軽量プラットフォーム設計</li>
+          <li>オブザーバビリティ / トレーシング / ログ運用</li>
+          <li>ストレージ運用（R2 / KV）とキャッシュ戦略</li>
+          <li>AI を組み込んだ開発環境整備（Claude Code / Cursor）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Organic cursor interaction
+    const cursorGlow = document.getElementById('cursorGlow');
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+      // Smooth following with elastic easing
+      currentX += (mouseX - currentX) * 0.08;
+      currentY += (mouseY - currentY) * 0.08;
+
+      cursorGlow.style.left = `${currentX}px`;
+      cursorGlow.style.top = `${currentY}px`;
+      cursorGlow.style.opacity = '1';
+
+      requestAnimationFrame(animateCursor);
+    }
+
+    animateCursor();
+  </script>
 </body>
 </html>
