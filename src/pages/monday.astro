@@ -1,6 +1,6 @@
 ---
-// Monday Page - リソースプール方式（名前とスキルのみ使用）
-import { name, coreStack } from '../data/resources';
+// Monday - Type B: Generative / Organic | p5.js | Muted
+import { name, role, bio } from '../data/resources';
 ---
 
 <!DOCTYPE html>
@@ -9,7 +9,10 @@ import { name, coreStack } from '../data/resources';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monday | {name}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
     * {
       margin: 0;
       padding: 0;
@@ -17,92 +20,227 @@ import { name, coreStack } from '../data/resources';
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      background: #1a1a2e;
-      color: #eee;
+      font-family: 'Inter', sans-serif;
+      background: #e8e4df;
+      color: #3a3a3a;
+      overflow: hidden;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
     }
 
-    .container {
-      text-align: center;
-      max-width: 800px;
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      padding: 4rem;
+      max-width: 600px;
+      pointer-events: none;
     }
 
     h1 {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 700;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 300;
       letter-spacing: -0.02em;
-      margin-bottom: 2rem;
-      color: #00d9ff;
-      text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+      margin-bottom: 1rem;
+      color: #7a8a7f;
+      opacity: 0;
+      animation: floatIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
     }
 
-    .subtitle {
-      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-      color: #aaa;
+    .role-text {
+      font-size: 1.2rem;
       font-weight: 400;
-      margin-bottom: 3rem;
+      color: #9da89f;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: floatIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
     }
 
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin: 2rem 0;
-    }
-
-    .skill-card {
-      background: rgba(0, 217, 255, 0.1);
-      border: 1px solid rgba(0, 217, 255, 0.3);
-      padding: 1.5rem 1rem;
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-
-    .skill-card:hover {
-      background: rgba(0, 217, 255, 0.2);
-      border-color: #00d9ff;
-      transform: translateY(-5px);
-      box-shadow: 0 5px 20px rgba(0, 217, 255, 0.3);
+    .bio-text {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #6a7a70;
+      font-weight: 300;
+      opacity: 0;
+      animation: floatIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s forwards;
     }
 
     .nav-link {
       display: inline-block;
-      margin-top: 3rem;
+      margin-top: 2rem;
       padding: 0.75rem 1.5rem;
-      background: transparent;
-      border: 1px solid #00d9ff;
-      color: #00d9ff;
+      background: rgba(122, 138, 127, 0.1);
+      color: #7a8a7f;
       text-decoration: none;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: all 0.3s ease;
+      border-radius: 50px;
+      font-weight: 400;
+      font-size: 0.95rem;
+      pointer-events: all;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      opacity: 0;
+      animation: floatIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s forwards;
     }
 
     .nav-link:hover {
-      background: #00d9ff;
-      color: #1a1a2e;
-      transform: translateY(-2px);
+      background: rgba(122, 138, 127, 0.2);
+      transform: translateX(-5px);
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        padding: 2rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div id="canvas-container"></div>
+
+  <div class="content">
     <h1>{name}</h1>
-    <p class="subtitle">Core Technology Stack</p>
-    <div class="skills-grid">
-      {coreStack.map(skill => (
-        <div class="skill-card">{skill}</div>
-      ))}
-    </div>
-    <a href="/" class="nav-link">← Back to Home</a>
+    <p class="role-text">{role}</p>
+    <p class="bio-text">{bio}</p>
+    <a href="/" class="nav-link">← Home</a>
   </div>
+
+  <script>
+    // Type B: Organic flow field with Perlin noise
+    let particles = [];
+    let flowField = [];
+    let cols, rows;
+    let scl = 20;
+    let zoff = 0;
+
+    function setup() {
+      let canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('canvas-container');
+
+      cols = floor(width / scl);
+      rows = floor(height / scl);
+
+      flowField = new Array(cols * rows);
+
+      // Initialize particles
+      for (let i = 0; i < 200; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function draw() {
+      background(232, 228, 223, 25);
+
+      // Generate flow field
+      let yoff = 0;
+      for (let y = 0; y < rows; y++) {
+        let xoff = 0;
+        for (let x = 0; x < cols; x++) {
+          let index = x + y * cols;
+          let angle = noise(xoff, yoff, zoff) * TWO_PI * 2;
+          let v = p5.Vector.fromAngle(angle);
+          v.setMag(0.5);
+          flowField[index] = v;
+          xoff += 0.1;
+        }
+        yoff += 0.1;
+      }
+      zoff += 0.002;
+
+      // Update and display particles
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].follow(flowField);
+        particles[i].update();
+        particles[i].edges();
+        particles[i].show();
+      }
+    }
+
+    class Particle {
+      constructor() {
+        this.pos = createVector(random(width), random(height));
+        this.vel = createVector(0, 0);
+        this.acc = createVector(0, 0);
+        this.maxSpeed = 2;
+        this.prevPos = this.pos.copy();
+        this.alpha = random(100, 200);
+      }
+
+      follow(vectors) {
+        let x = floor(this.pos.x / scl);
+        let y = floor(this.pos.y / scl);
+        let index = x + y * cols;
+        let force = vectors[index];
+        if (force) {
+          this.applyForce(force);
+        }
+      }
+
+      applyForce(force) {
+        this.acc.add(force);
+      }
+
+      update() {
+        this.vel.add(this.acc);
+        this.vel.limit(this.maxSpeed);
+        this.pos.add(this.vel);
+        this.acc.mult(0);
+      }
+
+      show() {
+        stroke(122, 138, 127, this.alpha);
+        strokeWeight(1);
+        line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
+        this.updatePrev();
+      }
+
+      updatePrev() {
+        this.prevPos.x = this.pos.x;
+        this.prevPos.y = this.pos.y;
+      }
+
+      edges() {
+        if (this.pos.x > width) {
+          this.pos.x = 0;
+          this.updatePrev();
+        }
+        if (this.pos.x < 0) {
+          this.pos.x = width;
+          this.updatePrev();
+        }
+        if (this.pos.y > height) {
+          this.pos.y = 0;
+          this.updatePrev();
+        }
+        if (this.pos.y < 0) {
+          this.pos.y = height;
+          this.updatePrev();
+        }
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+      cols = floor(width / scl);
+      rows = floor(height / scl);
+      flowField = new Array(cols * rows);
+    }
+  </script>
 </body>
 </html>

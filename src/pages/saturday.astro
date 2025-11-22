@@ -1,5 +1,6 @@
 ---
-// Saturday Page - 完全独立型テンプレート
+// Saturday - Type A: Systematic / Swiss Style | Three.js | Muted
+import { name, bio, coreStack } from '../data/resources';
 ---
 
 <!DOCTYPE html>
@@ -7,8 +8,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saturday | NaN</title>
+  <title>Saturday | {name}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
     * {
       margin: 0;
       padding: 0;
@@ -16,72 +20,218 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      background: #ffffff;
-      color: #333333;
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #f5f3ef;
+      color: #5a5a5a;
+      overflow: hidden;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
     }
 
-    .container {
-      text-align: center;
-      max-width: 800px;
+    #three-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
+      z-index: 1;
     }
 
-    h1 {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-      color: #1a1a1a;
-    }
-
-    .subtitle {
-      font-size: clamp(1rem, 2vw, 1.5rem);
-      color: #666666;
-      font-weight: 400;
-      margin-bottom: 2rem;
-    }
-
-    .description {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #555555;
-      max-width: 600px;
+    .swiss-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8vw;
+      min-height: 100vh;
+      max-width: 1200px;
       margin: 0 auto;
+      pointer-events: none;
     }
 
-    .nav-link {
+    .swiss-header {
+      border-bottom: 1px solid #b8b8b8;
+      padding-bottom: 2rem;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: preciseFade 1s ease-out 0.2s forwards;
+    }
+
+    .swiss-name {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      color: #7a8a7f;
+    }
+
+    .swiss-bio {
+      font-size: 1rem;
+      line-height: 1.8;
+      font-weight: 300;
+      color: #8a8a8a;
+      max-width: 700px;
+      margin-top: 1.5rem;
+      opacity: 0;
+      animation: preciseFade 1s ease-out 0.4s forwards;
+    }
+
+    .swiss-stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .swiss-stack-item {
+      padding: 1.5rem 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      background: rgba(186, 186, 186, 0.1);
+      border: 1px solid rgba(122, 138, 127, 0.2);
+      color: #6a7a70;
+      opacity: 0;
+      animation: preciseFade 0.8s ease-out calc(0.6s + var(--delay)) forwards;
+    }
+
+    .swiss-stack-item:nth-child(1) { --delay: 0s; }
+    .swiss-stack-item:nth-child(2) { --delay: 0.1s; }
+    .swiss-stack-item:nth-child(3) { --delay: 0.2s; }
+    .swiss-stack-item:nth-child(4) { --delay: 0.3s; }
+    .swiss-stack-item:nth-child(5) { --delay: 0.4s; }
+    .swiss-stack-item:nth-child(6) { --delay: 0.5s; }
+    .swiss-stack-item:nth-child(7) { --delay: 0.6s; }
+
+    .swiss-footer {
+      margin-top: auto;
+      padding-top: 3rem;
+      opacity: 0;
+      animation: preciseFade 1s ease-out 1.2s forwards;
+    }
+
+    .swiss-link {
       display: inline-block;
-      margin-top: 2rem;
-      padding: 0.75rem 1.5rem;
-      background: #f0f0f0;
-      color: #333333;
+      padding: 0.75rem 0;
+      font-size: 0.9rem;
+      font-weight: 400;
       text-decoration: none;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: all 0.3s ease;
+      color: #7a8a7f;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+      pointer-events: all;
     }
 
-    .nav-link:hover {
-      background: #e0e0e0;
-      transform: translateY(-2px);
+    .swiss-link:hover {
+      border-bottom-color: #7a8a7f;
+    }
+
+    @keyframes preciseFade {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .swiss-container {
+        padding: 2rem;
+      }
+
+      .swiss-stack-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Saturday</h1>
-    <p class="subtitle">土曜日</p>
-    <p class="description">
-      このページは将来的にカスタマイズ可能なテンプレートです。<br>
-      HTMLとCSSを自由に編集して、独自のデザインを作成できます。
-    </p>
-    <a href="/" class="nav-link">← ホームに戻る</a>
+  <div id="three-bg"></div>
+
+  <div class="swiss-container">
+    <div class="swiss-header">
+      <h1 class="swiss-name">{name}</h1>
+    </div>
+
+    <div class="swiss-bio">{bio}</div>
+
+    <div class="swiss-stack-grid">
+      {coreStack.map(tech => (
+        <div class="swiss-stack-item">{tech}</div>
+      ))}
+    </div>
+
+    <div class="swiss-footer">
+      <a href="/" class="swiss-link">← Return to Index</a>
+    </div>
   </div>
+
+  <script>
+    // Type A: Elegant minimal 3D scene with muted tones
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf5f3ef);
+    scene.fog = new THREE.Fog(0xf5f3ef, 10, 50);
+
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+    camera.position.z = 15;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    document.getElementById('three-bg').appendChild(renderer.domElement);
+
+    // Create muted geometric forms
+    const geometries = [
+      new THREE.IcosahedronGeometry(1, 0),
+      new THREE.OctahedronGeometry(1.2, 0),
+      new THREE.TetrahedronGeometry(1.5, 0)
+    ];
+
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xb8c9bf,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.3
+    });
+
+    const meshes = [];
+    geometries.forEach((geo, i) => {
+      const mesh = new THREE.Mesh(geo, material);
+      mesh.position.x = (i - 1) * 5;
+      mesh.position.y = Math.sin(i) * 2;
+      meshes.push(mesh);
+      scene.add(mesh);
+    });
+
+    // Gentle, controlled animation
+    function animate() {
+      requestAnimationFrame(animate);
+
+      meshes.forEach((mesh, i) => {
+        mesh.rotation.x += 0.002;
+        mesh.rotation.y += 0.003;
+        mesh.position.y = Math.sin(Date.now() * 0.0005 + i) * 2;
+      });
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Responsive
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
 </body>
 </html>
